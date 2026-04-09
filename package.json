@@ -1,0 +1,54 @@
+{
+  "name": "github-dev-wrapped",
+  "version": "0.1.0",
+  "description": "AI-powered weekly GitHub activity reports deployed to GitHub Pages",
+  "type": "module",
+  "bin": {
+    "github-dev-wrapped": "./dist/cli/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist/", "src/renderer/themes/", "assets/"],
+  "scripts": {
+    "build": "tsc && chmod +x dist/cli/index.js",
+    "dev": "tsc --watch",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@google/generative-ai": "^0.24.0",
+    "@inquirer/prompts": "^8.0.0",
+    "@octokit/graphql": "^9.0.0",
+    "@octokit/rest": "^21.0.0",
+    "commander": "^14.0.0",
+    "handlebars": "^4.7.9",
+    "libsodium-wrappers": "^0.7.13",
+    "marked": "^15.0.0",
+    "openai": "^4.77.0",
+    "sanitize-html": "^2.13.0",
+    "satori": "^0.12.0",
+    "sharp": "^0.33.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/libsodium-wrappers": "^0.7.14",
+    "@types/node": "^22.0.0",
+    "@types/sanitize-html": "^2.13.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^3.0.0"
+  }
+}
