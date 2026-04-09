@@ -1,0 +1,155 @@
+name: 'GitHub Dev Wrapped'
+description: 'AI-powered weekly GitHub activity reports deployed to GitHub Pages'
+author: 'himasha'
+
+branding:
+  icon: 'bar-chart-2'
+  color: 'purple'
+
+inputs:
+  github-token:
+    description: 'GitHub token (contents: write, pages: write)'
+    required: true
+  frequency:
+    description: 'Report frequency: weekly or monthly'
+    required: false
+    default: 'weekly'
+  theme:
+    description: 'Report theme: noir or clean'
+    required: false
+    default: 'noir'
+  language:
+    description: 'Report language (en, ja, zh-CN, zh-TW, ko, es, fr, de, pt, ru)'
+    required: false
+    default: 'en'
+  timezone:
+    description: 'IANA timezone (e.g. Asia/Colombo)'
+    required: false
+    default: 'UTC'
+  llm-provider:
+    description: 'LLM provider: openai, anthropic, gemini, groq, openrouter, grok'
+    required: false
+    default: ''
+  llm-model:
+    description: 'LLM model name'
+    required: false
+    default: ''
+  openai-api-key:
+    required: false
+    default: ''
+  anthropic-api-key:
+    required: false
+    default: ''
+  gemini-api-key:
+    required: false
+    default: ''
+  groq-api-key:
+    required: false
+    default: ''
+  openrouter-api-key:
+    required: false
+    default: ''
+  grok-api-key:
+    required: false
+    default: ''
+  date:
+    description: 'Target date (YYYY-MM-DD). Defaults to today.'
+    required: false
+    default: ''
+  version:
+    description: 'CLI version to use'
+    required: false
+    default: 'latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Configure git
+      shell: bash
+      run: |
+        git config user.name "github-dev-wrapped[bot]"
+        git config user.email "github-dev-wrapped[bot]@users.noreply.github.com"
+        git pull --rebase || true
+
+    - name: Fetch activity
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GITHUB_USERNAME: ${{ github.actor }}
+        FREQUENCY: ${{ inputs.frequency }}
+        TIMEZONE: ${{ inputs.timezone }}
+        DATA_DIR: ./data
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_DATE: ${{ inputs.date }}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" fetch ${INPUT_DATE:+--date "$INPUT_DATE"}
+
+    - name: Commit data
+      shell: bash
+      env:
+        FREQUENCY: ${{ inputs.frequency }}
+        TIMEZONE: ${{ inputs.timezone }}
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_DATE: ${{ inputs.date }}
+      run: |
+        git add -f data/
+        if git diff --cached --quiet; then
+          echo "No new data"
+        else
+          MSG=$(npx "github-dev-wrapped@${INPUT_VERSION}" commit-msg fetch ${INPUT_DATE:+--date "$INPUT_DATE"})
+          git commit -m "${MSG}"
+          git push
+        fi
+
+    - name: Generate AI narrative
+      shell: bash
+      env:
+        OPENAI_API_KEY: ${{ inputs.openai-api-key }}
+        ANTHROPIC_API_KEY: ${{ inputs.anthropic-api-key }}
+        GEMINI_API_KEY: ${{ inputs.gemini-api-key }}
+        GROQ_API_KEY: ${{ inputs.groq-api-key }}
+        OPENROUTER_API_KEY: ${{ inputs.openrouter-api-key }}
+        GROK_API_KEY: ${{ inputs.grok-api-key }}
+        LLM_PROVIDER: ${{ inputs.llm-provider }}
+        LLM_MODEL: ${{ inputs.llm-model }}
+        FREQUENCY: ${{ inputs.frequency }}
+        LANGUAGE: ${{ inputs.language }}
+        TIMEZONE: ${{ inputs.timezone }}
+        DATA_DIR: ./data
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_DATE: ${{ inputs.date }}
+      run: |
+        if [ -n "$LLM_PROVIDER" ] && [ -n "$LLM_MODEL" ]; then
+          npx "github-dev-wrapped@${INPUT_VERSION}" generate ${INPUT_DATE:+--date "$INPUT_DATE"}
+        else
+          echo "No LLM configured — skipping narrative generation"
+        fi
+
+    - name: Render report
+      shell: bash
+      env:
+        FREQUENCY: ${{ inputs.frequency }}
+        LANGUAGE: ${{ inputs.language }}
+        TIMEZONE: ${{ inputs.timezone }}
+        THEME: ${{ inputs.theme }}
+        DATA_DIR: ./data
+        OUTPUT_DIR: ./output
+        BASE_URL: ${{ format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+        SITE_TITLE: 'Dev Wrapped'
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_DATE: ${{ inputs.date }}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" render ${INPUT_DATE:+--date "$INPUT_DATE"}
+
+    - name: Deploy to GitHub Pages
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        OUTPUT_DIR: ./output
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_DATE: ${{ inputs.date }}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" deploy ${INPUT_DATE:+--date "$INPUT_DATE"}
