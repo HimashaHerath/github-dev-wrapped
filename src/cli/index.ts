@@ -5,6 +5,7 @@ import { generateCommand } from './commands/generate.js';
 import { renderCommand } from './commands/render.js';
 import { deployCommand } from './commands/deploy.js';
 import { commitMsgCommand } from './commands/commit-msg.js';
+import { setupCommand } from './commands/setup/index.js';
 
 const program = new Command();
 
@@ -18,5 +19,6 @@ program.addCommand(generateCommand);
 program.addCommand(renderCommand);
 program.addCommand(deployCommand);
 program.addCommand(commitMsgCommand);
+program.addCommand(setupCommand);
 
 program.parse();
