@@ -1,0 +1,8 @@
+{{> header}}
+<h2>All Reports</h2>
+<ul class="repo-list">
+  {{#each periods}}
+  <li><a href="{{../baseUrl}}/{{period.frequency}}/{{period.label}}/">{{period.label}}</a><span>{{signals.totalCommits}} commits</span></li>
+  {{/each}}
+</ul>
+{{> footer}}

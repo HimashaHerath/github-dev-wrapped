@@ -1,0 +1,8 @@
+{{#if llm}}
+<h2>Your Story</h2>
+<div class="narrative">
+  <div class="headline">{{llm.headline}}</div>
+  <p>{{llm.archetype}}</p>
+  {{#if llm.evolution}}<p style="margin-top:1rem;color:var(--muted)">{{llm.evolution}}</p>{{/if}}
+</div>
+{{/if}}

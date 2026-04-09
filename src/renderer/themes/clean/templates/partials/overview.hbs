@@ -1,0 +1,28 @@
+<h2>Overview</h2>
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-value">{{signals.totalCommits}}</div>
+    <div class="stat-label">Commits</div>
+    {{#if delta}}<div class="delta {{#if (gt delta.commits 0)}}up{{else}}down{{/if}}">{{deltaArrow delta.commits}} {{abs delta.commits}}</div>{{/if}}
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{signals.totalPRsOpened}}</div>
+    <div class="stat-label">PRs Opened</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{signals.totalPRsMerged}}</div>
+    <div class="stat-label">PRs Merged</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{signals.totalReviews}}</div>
+    <div class="stat-label">Reviews</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{signals.streak}}</div>
+    <div class="stat-label">Day Streak</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{formatHour signals.peakHour}}</div>
+    <div class="stat-label">Peak Hour</div>
+  </div>
+</div>
