@@ -1,6 +1,6 @@
 {
   "name": "github-dev-wrapped",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "AI-powered weekly GitHub activity reports deployed to GitHub Pages",
   "type": "module",
   "bin": {
@@ -17,7 +17,7 @@
   },
   "files": ["dist/", "assets/"],
   "scripts": {
-    "build": "tsc && chmod +x dist/cli/index.js && cp -r src/renderer/themes/noir/templates dist/renderer/themes/noir/templates && cp -r src/renderer/themes/clean/templates dist/renderer/themes/clean/templates",
+    "build": "tsc && chmod +x dist/cli/index.js && rm -rf dist/renderer/themes/noir/templates dist/renderer/themes/clean/templates && cp -r src/renderer/themes/noir/templates dist/renderer/themes/noir/templates && cp -r src/renderer/themes/clean/templates dist/renderer/themes/clean/templates",
     "dev": "tsc --watch",
     "lint": "eslint src/",
     "test": "vitest run",
