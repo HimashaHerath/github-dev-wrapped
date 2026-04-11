@@ -71,6 +71,7 @@ export async function triggerWorkflow(token: string, owner: string, repo: string
 }
 
 export async function enablePages(token: string, owner: string, repo: string): Promise<string> {
+  const pagesUrl = `https://${owner}.github.io/${repo}`;
   try {
     await fetch(`https://api.github.com/repos/${owner}/${repo}/pages`, {
       method: 'POST',
@@ -84,5 +85,12 @@ export async function enablePages(token: string, owner: string, repo: string): P
   } catch {
     // Pages may already be enabled or not yet applicable
   }
-  return `https://${owner}.github.io/${repo}`;
+  const octokit = new Octokit({ auth: token });
+  await octokit.rest.repos.update({
+    owner,
+    repo,
+    homepage: pagesUrl,
+    description: 'AI-powered weekly GitHub activity report',
+  });
+  return pagesUrl;
 }
