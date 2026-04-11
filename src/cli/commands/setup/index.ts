@@ -1,8 +1,6 @@
 import { Command } from 'commander';
 import { input, select, password, confirm } from '@inquirer/prompts';
-import { writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { createRepo, setSecret, enablePages } from './github-api.js';
+import { createRepo, setSecret, enablePages, pushWorkflowFile } from './github-api.js';
 import { generateWorkflowYaml, getCronFromFrequency } from './workflows.js';
 import { PROVIDERS, DEFAULT_MODELS } from './constants.js';
 import { spinner } from '../../spinner.js';
@@ -69,10 +67,11 @@ export const setupCommand = new Command('setup')
       llmModel: model,
     });
 
-    mkdirSync(join('.github', 'workflows'), { recursive: true });
-    writeFileSync(join('.github', 'workflows', 'wrapped.yml'), workflow);
+    s = spinner('Pushing workflow file...');
+    await pushWorkflowFile(pat, owner, repoName, workflow);
+    s.stop('Workflow committed to repo');
 
     console.log('\n✓ Setup complete!');
-    console.log(`  Push .github/workflows/wrapped.yml to your new repo.`);
-    console.log(`  Your report will be live at: ${pagesUrl}\n`);
+    console.log(`  Your report will be live at: ${pagesUrl}`);
+    console.log(`  The workflow runs on your chosen schedule — first report generates automatically.\n`);
   });

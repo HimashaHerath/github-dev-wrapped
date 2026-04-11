@@ -38,6 +38,26 @@ export async function setSecret(token: string, owner: string, repo: string, name
   });
 }
 
+export async function pushWorkflowFile(token: string, owner: string, repo: string, content: string): Promise<void> {
+  const octokit = new Octokit({ auth: token });
+  const path = '.github/workflows/wrapped.yml';
+  let sha: string | undefined;
+  try {
+    const { data } = await octokit.rest.repos.getContent({ owner, repo, path });
+    if (!Array.isArray(data)) sha = data.sha;
+  } catch {
+    // File doesn't exist yet — that's fine
+  }
+  await octokit.rest.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path,
+    message: 'chore: add github-dev-wrapped workflow',
+    content: Buffer.from(content).toString('base64'),
+    ...(sha ? { sha } : {}),
+  });
+}
+
 export async function enablePages(token: string, owner: string, repo: string): Promise<string> {
   try {
     await fetch(`https://api.github.com/repos/${owner}/${repo}/pages`, {
