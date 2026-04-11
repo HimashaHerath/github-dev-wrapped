@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { input, select, password, confirm } from '@inquirer/prompts';
-import { createRepo, setSecret, enablePages, pushWorkflowFile, triggerWorkflow } from './github-api.js';
+import { createRepo, setSecret, enablePages, pushWorkflowFile, pushReadme, triggerWorkflow } from './github-api.js';
 import { generateWorkflowYaml, getCronFromFrequency } from './workflows.js';
 import { PROVIDERS, DEFAULT_MODELS } from './constants.js';
 import { spinner } from '../../spinner.js';
@@ -66,6 +66,10 @@ export const setupCommand = new Command('setup')
       llmProvider: provider,
       llmModel: model,
     });
+
+    s = spinner('Writing README...');
+    await pushReadme(pat, owner, repoName, pagesUrl, frequency);
+    s.stop('README written');
 
     s = spinner('Pushing workflow file...');
     await pushWorkflowFile(pat, owner, repoName, workflow);
