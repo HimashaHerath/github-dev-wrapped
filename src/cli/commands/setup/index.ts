@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { input, select, password, confirm } from '@inquirer/prompts';
-import { createRepo, setSecret, enablePages, pushWorkflowFile } from './github-api.js';
+import { createRepo, setSecret, enablePages, pushWorkflowFile, triggerWorkflow } from './github-api.js';
 import { generateWorkflowYaml, getCronFromFrequency } from './workflows.js';
 import { PROVIDERS, DEFAULT_MODELS } from './constants.js';
 import { spinner } from '../../spinner.js';
@@ -71,7 +71,11 @@ export const setupCommand = new Command('setup')
     await pushWorkflowFile(pat, owner, repoName, workflow);
     s.stop('Workflow committed to repo');
 
+    s = spinner('Triggering first report...');
+    await triggerWorkflow(pat, owner, repoName);
+    s.stop('First report running');
+
     console.log('\n✓ Setup complete!');
     console.log(`  Your report will be live at: ${pagesUrl}`);
-    console.log(`  The workflow runs on your chosen schedule — first report generates automatically.\n`);
+    console.log(`  First report is generating now — check Actions tab for progress.\n`);
   });

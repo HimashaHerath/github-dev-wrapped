@@ -60,6 +60,16 @@ export async function pushWorkflowFile(token: string, owner: string, repo: strin
   });
 }
 
+export async function triggerWorkflow(token: string, owner: string, repo: string): Promise<void> {
+  const octokit = new Octokit({ auth: token });
+  await octokit.rest.actions.createWorkflowDispatch({
+    owner,
+    repo,
+    workflow_id: 'wrapped.yml',
+    ref: 'main',
+  });
+}
+
 export async function enablePages(token: string, owner: string, repo: string): Promise<string> {
   try {
     await fetch(`https://api.github.com/repos/${owner}/${repo}/pages`, {
