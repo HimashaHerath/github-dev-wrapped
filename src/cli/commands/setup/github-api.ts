@@ -39,11 +39,13 @@ export async function setSecret(token: string, owner: string, repo: string, name
 }
 
 export async function pushWorkflowFile(token: string, owner: string, repo: string, content: string): Promise<void> {
+  const silent = { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} };
+  const silentOctokit = new Octokit({ auth: token, log: silent });
   const octokit = new Octokit({ auth: token });
   const path = '.github/workflows/wrapped.yml';
   let sha: string | undefined;
   try {
-    const { data } = await octokit.rest.repos.getContent({ owner, repo, path });
+    const { data } = await silentOctokit.rest.repos.getContent({ owner, repo, path });
     if (!Array.isArray(data)) sha = data.sha;
   } catch {
     // File doesn't exist yet — that's fine

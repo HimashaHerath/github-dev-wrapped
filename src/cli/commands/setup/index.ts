@@ -57,7 +57,7 @@ export const setupCommand = new Command('setup')
     s.stop(`GitHub Pages: ${pagesUrl}`);
 
     const workflow = generateWorkflowYaml({
-      actionRef: 'himasha/github-dev-wrapped@main',
+      actionRef: `${owner}/github-dev-wrapped@main`,
       frequency,
       cron: getCronFromFrequency(frequency),
       theme,
