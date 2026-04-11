@@ -13,7 +13,7 @@ export const setupCommand = new Command('setup')
     console.log('\n  github-dev-wrapped setup\n');
 
     const pat = await password({ message: 'GitHub Personal Access Token (PAT):' });
-    const repoName = await input({ message: 'Report repository name:', default: 'github-dev-wrapped' });
+    const repoName = (await input({ message: 'Report repository name:', default: 'github-dev-wrapped' })).trim();
     const frequency = await select({
       message: 'Report frequency:',
       choices: [
