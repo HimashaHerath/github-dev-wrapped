@@ -1,0 +1,30 @@
+name: GitHub Dev Wrapped
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  wrapped:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: himasha/github-dev-wrapped@main
+        with:
+          github-token: ${{ secrets.GDW_PAT }}
+          frequency: 'weekly'
+          theme: 'noir'
+          language: 'en'
+          timezone: 'Asia/Colombo'
+          llm-provider: 'groq'
+          llm-model: 'llama-3.3-70b-versatile'
+          groq-api-key: ${{ secrets.GDW_LLM_KEY }}
