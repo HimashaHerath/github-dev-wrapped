@@ -7,11 +7,17 @@ const sodium = require('libsodium-wrappers') as typeof import('libsodium-wrapper
 export async function createRepo(token: string, repoName: string): Promise<{ owner: string }> {
   const octokit = new Octokit({ auth: token });
   const { data: user } = await octokit.rest.users.getAuthenticated();
-  await octokit.rest.repos.createForAuthenticatedUser({
-    name: repoName,
-    auto_init: true,
-    private: false,
-  });
+  try {
+    await octokit.rest.repos.createForAuthenticatedUser({
+      name: repoName,
+      auto_init: true,
+      private: false,
+    });
+  } catch (err: unknown) {
+    const status = (err as { status?: number }).status;
+    if (status !== 422) throw err;
+    // Repo already exists — reuse it
+  }
   return { owner: user.login };
 }
 
