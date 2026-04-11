@@ -1,4 +1,6 @@
 import { execSync } from 'child_process';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 
 export interface DeployOptions {
   outputDir: string;
@@ -10,6 +12,9 @@ export async function runDeploy(opts: DeployOptions): Promise<void> {
   const { outputDir, token, repository } = opts;
   const [owner, repo] = repository.split('/');
   const remote = `https://x-access-token:${token}@github.com/${owner}/${repo}.git`;
+
+  // Prevent Jekyll from processing our static HTML
+  writeFileSync(join(outputDir, '.nojekyll'), '');
 
   execSync(`git -C "${outputDir}" init -b gh-pages`, { stdio: 'inherit' });
   execSync(`git -C "${outputDir}" add .`, { stdio: 'inherit' });
