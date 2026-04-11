@@ -35,8 +35,21 @@ function computeHourDistribution(timestamps: Date[]): HourDistribution[] {
   return counts.map((count, hour) => ({ hour, count }));
 }
 
-function computeLanguageStats(_commits: RawActivity['commits']): LanguageStat[] {
-  return [];
+function computeLanguageStats(commits: RawActivity['commits']): LanguageStat[] {
+  const counts = new Map<string, number>();
+  for (const c of commits) {
+    if (c.language) counts.set(c.language, (counts.get(c.language) ?? 0) + 1);
+  }
+  const total = [...counts.values()].reduce((a, b) => a + b, 0);
+  if (total === 0) return [];
+  return [...counts.entries()]
+    .map(([language, commitCount]) => ({
+      language,
+      commitCount,
+      percentage: Math.round((commitCount / total) * 100),
+    }))
+    .sort((a, b) => b.commitCount - a.commitCount)
+    .slice(0, 5);
 }
 
 function computeRepoStats(prs: RawActivity['pullRequests'], commits: RawActivity['commits']): RepoStat[] {

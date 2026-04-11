@@ -1,9 +1,11 @@
 {{#if showArc}}
 <h2>Your Arc</h2>
-<p style="color:var(--muted);font-size:0.875rem;">Commit trend across all periods.</p>
-<div style="display:flex;align-items:flex-end;gap:4px;height:60px;margin-top:1rem;">
+<p class="arc-sub">Commit trend across all periods.</p>
+<div class="arc-chart">
   {{#each history}}
-  <div style="flex:1;background:var(--accent);opacity:0.7;" title="{{period.label}}: {{signals.totalCommits}} commits"></div>
+  <div class="arc-bar" style="height:{{barHeight}}%" title="{{period.label}}: {{signals.totalCommits}} commits">
+    <span class="arc-label">{{signals.totalCommits}}</span>
+  </div>
   {{/each}}
 </div>
 {{/if}}

@@ -12,6 +12,7 @@ export interface Period {
 export interface CommitData {
   sha: string;
   repo: string;
+  language: string | null;
   message: string;
   timestamp: Date;
   additions: number;

@@ -1,6 +1,11 @@
 <h2>Top Repos</h2>
 <ul class="repo-list">
   {{#each signals.topRepos}}
-  <li><span>{{repo}}</span><span>{{commits}} commits</span></li>
+  <li>
+    <span class="repo-name">
+      <span class="repo-owner">{{repoOwner repo}}/</span>{{shortRepo repo}}
+    </span>
+    <span class="repo-count">{{commits}} commits</span>
+  </li>
   {{/each}}
 </ul>

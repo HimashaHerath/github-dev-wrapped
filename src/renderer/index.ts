@@ -1,11 +1,26 @@
 import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import type { PeriodData, RenderConfig } from '../types.js';
+import type { Period, PeriodData, RenderConfig } from '../types.js';
 import { registerHelpers } from './helpers.js';
 import { getTheme } from './themes/index.js';
 import { buildCardSvgData, renderCardSvg } from './card.js';
 import { renderOgImageSvg } from './og-image.js';
 import { renderRss } from './rss.js';
+
+function formatDateRange(period: Period): string {
+  const start = new Date(period.startDate);
+  const end = new Date(period.endDate);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (period.frequency === 'monthly') {
+    return `${months[start.getUTCMonth()]} ${start.getUTCFullYear()}`;
+  }
+  const sm = months[start.getUTCMonth()];
+  const em = months[end.getUTCMonth()];
+  const sd = start.getUTCDate();
+  const ed = end.getUTCDate();
+  const year = end.getUTCFullYear();
+  return sm === em ? `${sm} ${sd}–${ed}, ${year}` : `${sm} ${sd} – ${em} ${ed}, ${year}`;
+}
 
 export async function runRenderer(
   currentData: PeriodData,
@@ -20,14 +35,23 @@ export async function runRenderer(
   mkdirSync(periodPath, { recursive: true });
 
   const showArc = allPeriods.length >= 3;
+  const maxHourCount = Math.max(...currentData.signals.hourDistribution.map(h => h.count), 1);
+  const maxArcCommits = Math.max(...allPeriods.map(p => p.signals.totalCommits), 1);
+  const historyWithHeights = allPeriods.map(p => ({
+    ...p,
+    barHeight: Math.max(4, Math.round((p.signals.totalCommits / maxArcCommits) * 100)),
+  }));
+
   const templateData = {
     signals: currentData.signals,
     delta: currentData.delta,
     llm: currentData.llm,
     period: currentData.period,
     periodLabel: currentData.period.label,
-    history: allPeriods,
+    dateRange: formatDateRange(currentData.period),
+    history: historyWithHeights,
     showArc,
+    maxHourCount,
     baseUrl: config.baseUrl,
     language: config.language,
     title: `${config.siteTitle} — ${currentData.period.label}`,

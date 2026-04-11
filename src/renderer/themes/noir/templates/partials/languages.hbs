@@ -1,7 +1,9 @@
+{{#if signals.topLanguages}}
 <h2>Languages</h2>
 {{#each signals.topLanguages}}
-<div style="margin-bottom:0.75rem;">
-  <div style="display:flex;justify-content:space-between;font-size:0.875rem;"><span>{{language}}</span><span>{{percentage}}%</span></div>
-  <div class="bar"><div class="bar-fill" style="width:{{percentBar percentage}}%"></div></div>
+<div class="lang-row">
+  <div class="lang-meta"><span>{{language}}</span><span>{{percentage}}%</span></div>
+  <div class="bar"><div class="bar-fill" style="width:{{percentage}}%"></div></div>
 </div>
 {{/each}}
+{{/if}}

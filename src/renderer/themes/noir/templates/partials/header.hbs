@@ -6,10 +6,17 @@
   <title>{{title}}</title>
   <meta name="description" content="{{description}}">
   <meta property="og:title" content="{{title}}">
+  <meta property="og:description" content="{{description}}">
   <meta property="og:image" content="{{ogImage}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
   <style>{{{styles}}}</style>
 </head>
 <body>
 <div class="container">
-  <h1>{{periodLabel}}</h1>
-  <p style="color:var(--muted);margin-bottom:2rem;">{{subtitle}}</p>
+  <div class="hero">
+    {{#if llm}}<div class="hero-headline">{{llm.headline}}</div>{{/if}}
+    <h1>{{dateRange}}</h1>
+    <p class="hero-sub">{{subtitle}}</p>
+    {{#if llm}}<p class="hero-archetype">{{llm.archetype}}</p>{{/if}}
+  </div>

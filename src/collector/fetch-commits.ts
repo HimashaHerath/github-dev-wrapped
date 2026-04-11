@@ -19,6 +19,7 @@ export async function fetchCommits(graphql: any, username: string, from: Date, t
         commits.push({
           sha: `${repoName}-${contribution.occurredAt}-${i}`,
           repo: repoName,
+          language: repoEntry.repository.primaryLanguage?.name ?? null,
           message: '',
           timestamp: new Date(contribution.occurredAt),
           additions: 0,

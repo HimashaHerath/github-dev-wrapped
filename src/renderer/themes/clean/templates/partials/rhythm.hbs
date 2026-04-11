@@ -1,6 +1,9 @@
 <h2>Your Rhythm</h2>
 <div class="heatmap">
   {{#each signals.hourDistribution}}
-    <div class="heatmap-cell" style="background: rgba(255,255,255,{{#if count}}0.{{percentBar count}}{{else}}0.05{{/if}})" title="{{formatHour hour}}: {{count}} commits"></div>
+    <div class="heatmap-cell" style="opacity:{{heatOpacity count ../maxHourCount}}" title="{{formatHour hour}}: {{count}} commits"></div>
   {{/each}}
+</div>
+<div class="heatmap-axis">
+  <span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span>
 </div>

@@ -1,4 +1,4 @@
-<h2>Overview</h2>
+<h2>The Numbers</h2>
 <div class="stat-grid">
   <div class="stat-card">
     <div class="stat-value">{{signals.totalCommits}}</div>
@@ -24,5 +24,13 @@
   <div class="stat-card">
     <div class="stat-value">{{formatHour signals.peakHour}}</div>
     <div class="stat-label">Peak Hour</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{signals.focusScore}}%</div>
+    <div class="stat-label">Focus Score</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{formatPercent signals.reviewGenerosity}}</div>
+    <div class="stat-label">Generosity</div>
   </div>
 </div>
