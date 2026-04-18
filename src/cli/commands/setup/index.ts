@@ -4,6 +4,7 @@ import { createRepo, setSecret, enablePages, pushWorkflowFile, pushReadme, trigg
 import { generateWorkflowYaml, getCronFromFrequency } from './workflows.js';
 import { PROVIDERS, DEFAULT_MODELS } from './constants.js';
 import { spinner } from '../../spinner.js';
+import type { LLMProvider } from '../../../llm/types.js';
 
 export const setupCommand = new Command('setup')
   .description('Interactive setup wizard')
@@ -23,7 +24,7 @@ export const setupCommand = new Command('setup')
     const provider = await select({
       message: 'LLM provider:',
       choices: PROVIDERS.map(p => ({ value: p })),
-    }) as string;
+    }) as LLMProvider;
 
     const defaultModel = DEFAULT_MODELS[provider] ?? '';
     const model = await input({ message: 'LLM model name:', default: defaultModel });

@@ -1,20 +1,6 @@
-import { execSync } from 'child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import type { PeriodData } from '../types.js';
-
-const DATA_BRANCH = 'data';
-
-export function ensureOrphanBranch(): void {
-  try {
-    execSync(`git show-ref --verify --quiet refs/heads/${DATA_BRANCH}`, { stdio: 'ignore' });
-  } catch {
-    execSync(`git checkout --orphan ${DATA_BRANCH}`, { stdio: 'inherit' });
-    execSync('git rm -rf . --quiet', { stdio: 'inherit' });
-    execSync(`git commit --allow-empty -m "chore: init data branch"`, { stdio: 'inherit' });
-    execSync('git checkout -', { stdio: 'inherit' });
-  }
-}
 
 export function readPeriodData(dataDir: string, filePath: string): PeriodData | null {
   const fullPath = join(dataDir, filePath);

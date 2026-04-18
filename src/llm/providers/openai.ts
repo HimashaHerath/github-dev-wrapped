@@ -14,7 +14,12 @@ export async function complete(apiKey: string, model: string, prompt: string, ba
 }
 
 export function parseOutput(text: string): LLMRawOutput {
-  const parsed = JSON.parse(text);
+  let parsed: Record<string, unknown> = {};
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    // non-JSON response from LLM — return empty output rather than crashing
+  }
   return {
     archetype: String(parsed.archetype ?? ''),
     evolution: parsed.evolution ? String(parsed.evolution) : null,

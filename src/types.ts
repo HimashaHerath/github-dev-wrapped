@@ -104,7 +104,7 @@ export interface LLMOutput {
   headline: string;
 }
 
-// Full period data (stored as JSON in orphan branch)
+// Full period data (stored as JSON in the main branch under data/)
 export interface PeriodData {
   period: Period;
   signals: ActivitySignals;

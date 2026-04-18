@@ -12,6 +12,7 @@ export async function fetchStars(graphql: any, username: string, from: Date, to:
 
     for (const { starredAt, node } of edges) {
       const starDate = new Date(starredAt);
+      // relies on DESC ordering (orderBy STARRED_AT DESC) — earlier stars mean we're done
       if (starDate < from) return stars;
       if (starDate <= to) {
         stars.push({
