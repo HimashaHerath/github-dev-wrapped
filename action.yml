@@ -76,6 +76,18 @@ runs:
         git config user.email "github-dev-wrapped[bot]@users.noreply.github.com"
         git pull --rebase || true
 
+    - name: Resolve effective date
+      shell: bash
+      env:
+        FREQUENCY: ${{ inputs.frequency }}
+        INPUT_DATE: ${{ inputs.date }}
+      run: |
+        if [ -z "$INPUT_DATE" ] && [ "$FREQUENCY" = "weekly" ]; then
+          echo "EFFECTIVE_DATE=$(date -d 'yesterday' '+%Y-%m-%d')" >> $GITHUB_ENV
+        else
+          echo "EFFECTIVE_DATE=$INPUT_DATE" >> $GITHUB_ENV
+        fi
+
     - name: Fetch activity
       shell: bash
       env:
@@ -85,8 +97,7 @@ runs:
         TIMEZONE: ${{ inputs.timezone }}
         DATA_DIR: ./data
         INPUT_VERSION: ${{ inputs.version }}
-        INPUT_DATE: ${{ inputs.date }}
-      run: npx "github-dev-wrapped@${INPUT_VERSION}" fetch ${INPUT_DATE:+--date "$INPUT_DATE"}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" fetch ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"}
 
     - name: Commit data
       shell: bash
@@ -94,13 +105,12 @@ runs:
         FREQUENCY: ${{ inputs.frequency }}
         TIMEZONE: ${{ inputs.timezone }}
         INPUT_VERSION: ${{ inputs.version }}
-        INPUT_DATE: ${{ inputs.date }}
       run: |
         git add -f data/
         if git diff --cached --quiet; then
           echo "No new data"
         else
-          MSG=$(npx "github-dev-wrapped@${INPUT_VERSION}" commit-msg fetch ${INPUT_DATE:+--date "$INPUT_DATE"})
+          MSG=$(npx "github-dev-wrapped@${INPUT_VERSION}" commit-msg fetch ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"})
           git commit -m "${MSG}"
           git push
         fi
@@ -121,10 +131,9 @@ runs:
         TIMEZONE: ${{ inputs.timezone }}
         DATA_DIR: ./data
         INPUT_VERSION: ${{ inputs.version }}
-        INPUT_DATE: ${{ inputs.date }}
       run: |
         if [ -n "$LLM_PROVIDER" ] && [ -n "$LLM_MODEL" ]; then
-          npx "github-dev-wrapped@${INPUT_VERSION}" generate ${INPUT_DATE:+--date "$INPUT_DATE"}
+          npx "github-dev-wrapped@${INPUT_VERSION}" generate ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"}
         else
           echo "No LLM configured — skipping narrative generation"
         fi
@@ -136,14 +145,13 @@ runs:
         TIMEZONE: ${{ inputs.timezone }}
         LLM_PROVIDER: ${{ inputs.llm-provider }}
         INPUT_VERSION: ${{ inputs.version }}
-        INPUT_DATE: ${{ inputs.date }}
       run: |
         if [ -n "$LLM_PROVIDER" ]; then
           git add -f data/
           if git diff --cached --quiet; then
             echo "No narrative changes to commit"
           else
-            MSG=$(npx "github-dev-wrapped@${INPUT_VERSION}" commit-msg generate ${INPUT_DATE:+--date "$INPUT_DATE"})
+            MSG=$(npx "github-dev-wrapped@${INPUT_VERSION}" commit-msg generate ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"})
             git commit -m "${MSG}"
             git push
           fi
@@ -161,8 +169,7 @@ runs:
         BASE_URL: ${{ format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
         SITE_TITLE: 'Dev Wrapped'
         INPUT_VERSION: ${{ inputs.version }}
-        INPUT_DATE: ${{ inputs.date }}
-      run: npx "github-dev-wrapped@${INPUT_VERSION}" render ${INPUT_DATE:+--date "$INPUT_DATE"}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" render ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"}
 
     - name: Deploy to GitHub Pages
       shell: bash
@@ -171,5 +178,4 @@ runs:
         GITHUB_REPOSITORY: ${{ github.repository }}
         OUTPUT_DIR: ./output
         INPUT_VERSION: ${{ inputs.version }}
-        INPUT_DATE: ${{ inputs.date }}
-      run: npx "github-dev-wrapped@${INPUT_VERSION}" deploy ${INPUT_DATE:+--date "$INPUT_DATE"}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" deploy ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"}

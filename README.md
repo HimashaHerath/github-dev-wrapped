@@ -4,7 +4,7 @@ AI-powered weekly and monthly GitHub activity reports — deployed automatically
 
 Like Spotify Wrapped, but for your code. Runs on your own GitHub account every week or month, generates a unique AI-written personality profile from your actual activity, and publishes a beautiful static report to GitHub Pages.
 
-**[Live demo →](https://himashaherath.github.io/my-dev-wrapped/weekly/2026-W15/)**
+**[Live demo →](https://himashaherath.github.io/my-dev-wrapped/weekly/2026-W16/)**
 
 ---
 
