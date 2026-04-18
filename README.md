@@ -4,7 +4,7 @@ AI-powered weekly and monthly GitHub activity reports — deployed automatically
 
 Like Spotify Wrapped, but for your code. Runs on your own GitHub account every week or month, generates a unique AI-written personality profile from your actual activity, and publishes a beautiful static report to GitHub Pages.
 
-**[Live demo →](https://himashaherath.github.io/my-dev-wrapped/weekly/2026-W16/)**
+**[Live demo →](https://himashaherath.github.io/my-dev-wrapped/)**
 
 ---
 
@@ -19,7 +19,7 @@ Like Spotify Wrapped, but for your code. Runs on your own GitHub account every w
 - `clean` — light, minimal, editorial. Portfolio-ready.
 
 **Two frequencies:**
-- `weekly` — every Monday, compares to previous week
+- `weekly` — runs every Monday, reports the previous complete week (Mon–Sun)
 - `monthly` — first of each month, richer stats
 
 **AI writes three things every run:**
@@ -108,7 +108,7 @@ GitHub Actions (weekly/monthly cron)
     └─ deploy     Force-push static output to gh-pages branch
 ```
 
-All data lives in your report repo as JSON. No external database. No hosted backend. The orphan `data` branch stores period history; `gh-pages` serves the rendered output.
+All data lives in your report repo as JSON. No external database. No hosted backend. Period history is committed to the `main` branch under `data/`; `gh-pages` serves the rendered output.
 
 ---
 
@@ -149,6 +149,31 @@ npx github-dev-wrapped generate       # Generate AI narrative
 npx github-dev-wrapped render         # Build HTML report + SVG card
 npx github-dev-wrapped deploy         # Push to GitHub Pages
 ```
+
+---
+
+## Contributing
+
+Contributions are welcome — bug fixes, new themes, additional LLM providers, language translations, or anything that makes the reports better.
+
+**Getting started:**
+
+```bash
+git clone https://github.com/himasha/github-dev-wrapped
+cd github-dev-wrapped
+npm install
+npm run build       # compile TypeScript
+npm test            # run tests
+```
+
+**Key areas to contribute:**
+
+- `src/collector/` — GitHub API queries and signal derivation
+- `src/llm/providers/` — add a new LLM provider (implement the `LLMProvider` interface)
+- `src/renderer/themes/` — add a new visual theme (Handlebars templates + styles)
+- `src/i18n/locales/` — add or improve a language translation
+
+Please open an issue before starting larger changes so we can align on approach. PRs should include tests where applicable and pass `npm test` cleanly.
 
 ---
 
