@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { existsSync, mkdirSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { runCollector } from '../../collector/index.js';
+import { getPeriod } from '../../collector/date-range.js';
 import { getPeriodFilePath } from '../../deployer/period.js';
 import { readPeriodData, writePeriodData } from '../../deployer/orphan-branch.js';
 import { spinner } from '../spinner.js';
@@ -22,11 +23,12 @@ export const fetchCommand = new Command('fetch')
       process.exit(1);
     }
 
-    const s = spinner('Collecting GitHub activity...');
-    const tempData = await runCollector({ username, token, frequency, timezone, dateStr: opts.date, previousPeriodData: null });
-    const filePath = getPeriodFilePath(frequency, tempData.period.label);
-    const prevPath = getPreviousPeriodPath(dataDir, frequency, tempData.period.label);
+    const period = getPeriod(frequency, opts.date, timezone);
+    const filePath = getPeriodFilePath(frequency, period.label);
+    const prevPath = getPreviousPeriodPath(dataDir, frequency, period.label);
     const previous = prevPath ? readPeriodData(dataDir, prevPath) : null;
+
+    const s = spinner('Collecting GitHub activity...');
     const data = await runCollector({ username, token, frequency, timezone, dateStr: opts.date, previousPeriodData: previous });
 
     mkdirSync(join(dataDir, frequency), { recursive: true });

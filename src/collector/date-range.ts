@@ -1,5 +1,6 @@
 import type { Frequency, Period } from '../types.js';
 
+// _timezone is intentionally unused: period boundaries are always UTC so history is consistent across tz changes.
 export function getPeriod(frequency: Frequency, dateStr: string | undefined, _timezone: string): Period {
   const ref = dateStr ? new Date(dateStr + 'T12:00:00Z') : new Date();
   if (frequency === 'weekly') return getWeeklyPeriod(ref);

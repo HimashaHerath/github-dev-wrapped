@@ -53,7 +53,7 @@ inputs:
     required: false
     default: ''
   date:
-    description: 'Target date (YYYY-MM-DD). Defaults to today.'
+    description: 'Target date (YYYY-MM-DD). Defaults to yesterday for weekly (reports previous complete week), today for monthly.'
     required: false
     default: ''
   version:
@@ -178,4 +178,4 @@ runs:
         GITHUB_REPOSITORY: ${{ github.repository }}
         OUTPUT_DIR: ./output
         INPUT_VERSION: ${{ inputs.version }}
-      run: npx "github-dev-wrapped@${INPUT_VERSION}" deploy ${EFFECTIVE_DATE:+--date "$EFFECTIVE_DATE"}
+      run: npx "github-dev-wrapped@${INPUT_VERSION}" deploy

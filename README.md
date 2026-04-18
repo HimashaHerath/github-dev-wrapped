@@ -124,6 +124,7 @@ The generated workflow file (`.github/workflows/wrapped.yml`) supports these inp
 | `timezone` | `UTC` | IANA timezone (e.g. `Asia/Colombo`) |
 | `llm-provider` | — | Provider name (see table above) |
 | `llm-model` | — | Model name |
+| `date` | — | Target date `YYYY-MM-DD` for manual backfills via `workflow_dispatch`. Omit for automatic behaviour (weekly defaults to the previous complete week, monthly to the current month). |
 
 ---
 
