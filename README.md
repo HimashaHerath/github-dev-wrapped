@@ -175,6 +175,15 @@ npm test            # run tests
 
 Please open an issue before starting larger changes so we can align on approach. PRs should include tests where applicable and pass `npm test` cleanly.
 
+**Releasing a new version:**
+
+```bash
+npm version patch   # or minor / major
+git push --follow-tags
+```
+
+That's it — pushing the tag triggers the publish workflow which runs tests, builds, publishes to npm, and creates a GitHub Release automatically.
+
 ---
 
 ## License
