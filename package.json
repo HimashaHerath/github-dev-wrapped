@@ -1,7 +1,11 @@
 {
   "name": "github-dev-wrapped",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "AI-powered weekly GitHub activity reports deployed to GitHub Pages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HimashaHerath/github-dev-wrapped"
+  },
   "type": "module",
   "bin": {
     "github-dev-wrapped": "./dist/cli/index.js"
