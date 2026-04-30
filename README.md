@@ -1,10 +1,12 @@
 # github-dev-wrapped
 
+[![npm](https://img.shields.io/npm/v/github-dev-wrapped)](https://www.npmjs.com/package/github-dev-wrapped)
+
 AI-powered weekly and monthly GitHub activity reports — deployed automatically to GitHub Pages, with zero backend infrastructure.
 
 Like Spotify Wrapped, but for your code. Runs on your own GitHub account every week or month, generates a unique AI-written personality profile from your actual activity, and publishes a beautiful static report to GitHub Pages.
 
-**[Live demo →](https://himashaherath.github.io/my-dev-wrapped/)**
+**[Live demo →](https://himashaherath.github.io/my-dev-wrapped/)** · **[npm package →](https://www.npmjs.com/package/github-dev-wrapped)**
 
 ---
 
